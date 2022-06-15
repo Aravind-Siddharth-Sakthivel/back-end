@@ -52,4 +52,9 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
+app.listen(3000, function(){
+  console.log('Listening on port ' + 3000); //Listening on port 8888
+});
+
+
 module.exports = app;

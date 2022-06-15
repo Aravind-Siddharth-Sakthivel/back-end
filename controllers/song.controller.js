@@ -2,7 +2,8 @@ const Song = require("../models/songs.model");
 
 exports.findAll = function (req, res) {
   Song.findAll(function (err, song) {
-    if (err) res.send(err);
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
     res.json(song);
   });
 };
@@ -32,8 +33,13 @@ exports.create = function (req, res) {
       .send({ error: true, message: "Please provide all required field" });
   } else {
     Song.create(newSong, function (err, song) {
-      if (err) res.send(err);
-      res.json({
+      if (err) {
+        console.log(err);
+        res
+          .status(500)
+        .send({ error: false, message: "Something went Wrong!" });
+      }
+      else res.json({
         error: false,
         message: "Song added successfully!",
         data: song,
@@ -51,7 +57,10 @@ exports.update = function (req, res) {
       .send({ error: true, message: "Please provide all required field" });
   } else {
     Song.update(req.body.id, newSong, function (err, song) {
-      if (err) res.send(err);
+      if (err)
+        res
+          .status(500)
+          .send({ error: false, message: "Something went Wrong!" });
       res.json({
         error: false,
         message: "Song updated successfully!",
@@ -61,30 +70,55 @@ exports.update = function (req, res) {
   }
 };
 
+exports.updateFav = function (req, res) {
+  //handles null error
+  Song.updateFav(req.body, function (err, song) {
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
+    res.json({
+      error: false,
+      message: "Song Favourite updated",
+      data: song,
+    });
+  });
+};
+
+exports.getFav = function (req, res) {
+  Song.getFav(function (err, song) {
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
+    res.json(song);
+  });
+};
+
 exports.findById = function (req, res) {
   Song.findById(req.params.id, function (err, song) {
-    if (err) res.send(err);
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
     res.json(song);
   });
 };
 
 exports.findByAlbum = function (req, res) {
   Song.findAlbums(function (err, albums) {
-    if (err) res.send(err);
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
     res.json(albums);
   });
 };
 
 exports.findSongsByAlbum = function (req, res) {
   Song.findSongs(req.params.album, function (err, song) {
-    if (err) res.send(err);
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
     res.json(song);
   });
 };
 
 exports.delete = function (req, res) {
   Song.delete(req.params.id, function (err, song) {
-    if (err) res.send(err);
+    if (err)
+      res.status(500).send({ error: false, message: "Something went Wrong!" });
     res.json({ error: false, message: "Song successfully deleted" });
   });
 };
